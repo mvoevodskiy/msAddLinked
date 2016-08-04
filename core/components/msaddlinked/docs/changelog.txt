@@ -1,0 +1,19 @@
+Changelog for msAddLinked.
+
+0.1.0-pl
+==============
+- Added ability to use input radio
+
+0.1.0-rc
+==============
+- Optimized logic and elements
+- Removed unnecessary snippet msAddLinked.Cart and outer chunks
+
+0.1.0-beta2
+==============
+- Added price formatting at front-end
+- Fixed system settings
+
+0.1.0-beta
+==============
+- Public release
