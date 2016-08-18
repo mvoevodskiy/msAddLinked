@@ -13,13 +13,17 @@ $product_id = $modx->getOption('product', $scriptProperties, 0);
 $link_id = $modx->getOption('link', $scriptProperties, 0);
 $input_type = $modx->getOption('inputType', $scriptProperties, 'checkbox');
 $field_name = $modx->getOption('fieldName', $scriptProperties, 'pagetitle');
+$field_discount = $modx->getOption('fieldDiscount', $scriptProperties, '');
 $priceTarget = $modx->getOption('priceTarget', $scriptProperties, '#price');
 $priceOrigTarget = $modx->getOption('priceOrigTarget', $scriptProperties, '#msal_price_original');
+$priceFullTarget = $modx->getOption('priceFullTarget', $scriptProperties, '#msal_price_full');
 $toPlaceholder = $modx->getOption('toPlaceholder', $scriptProperties, false);
 
 $var = $modx->getOption('msal_variable', null, 'msal');
 $price = 0;
 $output = '';
+$hash = md5(http_build_query($scriptProperties));
+$_SESSION['msal'][$hash] = $scriptProperties;
 
 $product_id = $product_id == 0 ? $modx->resource->id : $product_id;
 
@@ -53,12 +57,21 @@ foreach ($links as $l) {
             $id = 'radio';
             $value = $linked->get('id');
         }
+        $discount = 0;
+        if ($field_discount) {
+            if (in_array($field_discount, $linked->fieldNames) or in_array($field_discount, $linked->getDataFieldsNames())) {
+                $discount = $linked->get($field_discount);
+            } else {
+                $discount = $linked->getTVValue($field_discount);
+            }
+        }
         $inputs[] = array(
             "linked_id" => $id,
             "linked_name" => $linked->get($field_name),
             "linked_price" => $linked->get('price'),
             "link_id" => $l->get('link'),
             "field_name" => $field_name,
+            "linked_discount" => $discount,
             "input_type" => $input_type,
             "value" => $value,
         );
@@ -68,7 +81,7 @@ if (!empty($inputs)) {
 //    $output = implode("\n", $outputArray);
     $output = $pdoFetch->getChunk(
         $tpl,
-        array("inputs" => $inputs, "product_price" => $price, "var" => $var),
+        array("inputs" => $inputs, "product_price" => $price, "var" => $var, "hash" => $hash),
         true
     );
 }
@@ -78,6 +91,7 @@ if ($js = trim($modx->getOption('msal_frontend_js'))) {
                     <script type="text/javascript">
                         var msal = {}; msal.price_target="'. $priceTarget. '";
                         msal.price_orig_target="'.$priceOrigTarget.'";
+                        msal.price_full_target="'.$priceFullTarget.'";
                     </script>
                     '), true);
         $modx->regClientScript(str_replace('[[+jsUrl]]', '/assets/components/msaddlinked/js/', $js));

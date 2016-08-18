@@ -1,5 +1,9 @@
 Changelog for msAddLinked.
 
+0.2.0-pl
+==============
+- Added ability to use discount for options
+
 0.1.0-pl
 ==============
 - Added ability to use input radio

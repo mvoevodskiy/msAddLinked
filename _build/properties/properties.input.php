@@ -27,9 +27,17 @@ $tmp = array(
 		'type' => 'textfield',
 		'value' => '#msal_price_original',
 	),
+	'priceFullTarget' => array(
+		'type' => 'textfield',
+		'value' => '#msal_price_full',
+	),
 	'fieldName' => array(
 		'type' => 'textfield',
 		'value' => "pagetitle",
+	),
+	'fieldDiscount' => array(
+		'type' => 'textfield',
+		'value' => "",
 	),
 	'toPlaceholder' => array(
 		'type' => 'combo-boolean',

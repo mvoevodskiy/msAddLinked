@@ -14,12 +14,18 @@ $(document).on('ready', function() {
     $(document).on('change', '.msal_input', function (event) {
         msal.orig_price = parseInt($(msal.price_orig_target).val());
         msal.additional_price = 0;
+        msal.discount = 0;
 
         $('.msal_input').each(function() {
             add_price = parseInt($(this).data('price'));
+            add_discount = parseInt($(this).data('discount'));
+            if (isNaN(add_discount)) {
+                add_discount = 0;
+            }
             if ($(this).attr('type') === 'checkbox') {
                 if ($(this).is(':checked')) {
-                   msal.additional_price = msal.additional_price + add_price;
+                    msal.additional_price = msal.additional_price + add_price;
+                    msal.discount = add_discount;
                 }
             } else {
                 if ($(this).attr('type') === 'radio') {
@@ -33,12 +39,15 @@ $(document).on('ready', function() {
                 }
                 if (!isNaN(count)) {
                     msal.additional_price = msal.additional_price + add_price * count;
+                    msal.discount = add_discount * count;
                 }
             }
         });
 
-        new_price = miniShop2.Utils.formatPrice(msal.orig_price + msal.additional_price);
+        new_price = miniShop2.Utils.formatPrice(msal.orig_price + msal.additional_price - msal.discount);
+        full_price = miniShop2.Utils.formatPrice(msal.orig_price + msal.additional_price);
         $(msal.price_target).html(new_price);
+        $(msal.price_full_target).html(full_price);
 
     });
 });

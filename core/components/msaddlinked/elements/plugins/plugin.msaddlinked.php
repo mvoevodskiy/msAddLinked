@@ -1,4 +1,5 @@
 <?php
+/* @var array $scriptProperties */
 
 switch ($modx->event->name) {
 
@@ -9,6 +10,10 @@ switch ($modx->event->name) {
         $options = &$cartArray[$key]['options'];
         if (isset($options[$var])) {
             $additionalPrice = 0;
+            if (isset($_POST['msal_key']) and isset($_SESSION['msal'][$_POST['msal_key']])) {
+                $scriptProperties = array_merge($scriptProperties, $_SESSION['msal'][$_POST['msal_key']]);
+            }
+            $field_discount = $modx->getOption('fieldDiscount', $scriptProperties, '');
             foreach ($options[$var] as $pKey => $count) {
 
                 $linked = explode('__', $pKey);
@@ -34,7 +39,15 @@ switch ($modx->event->name) {
                 }
 
                 if ($linkedMSP = $modx->getObject('msProduct', (int) $id)) {
-                    $additionalPrice = $additionalPrice + $linkedMSP->get('price') * $count;
+                    $discount = 0;
+                    if ($field_discount) {
+                        if (in_array($field_discount, $linkedMSP->fieldNames) or in_array($field_discount, $linkedMSP->getDataFieldsNames())) {
+                            $discount = $linkedMSP->get($field_discount);
+                        } else {
+                            $discount = $linkedMSP->getTVValue($field_discount);
+                        }
+                    }
+                    $additionalPrice = $additionalPrice + ($linkedMSP->get('price') - $discount) * $count;
                 }
 
             }
