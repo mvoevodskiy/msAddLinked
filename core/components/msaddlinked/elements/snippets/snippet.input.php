@@ -36,7 +36,7 @@ if (!is_numeric($link_id)) {
     if ($link = $modx->getObject('msLink', array('name' => $link_id ))) {
         $link_id = $link->get('id');
     } else {
-        $link = 0;
+        $link_id = 0;
     }
 };
 if ($link_id) {
@@ -59,7 +59,7 @@ foreach ($links as $l) {
         }
         $discount = 0;
         if ($field_discount) {
-            if (in_array($field_discount, $linked->fieldNames) or in_array($field_discount, $linked->getDataFieldsNames())) {
+            if (in_array($field_discount, array_keys($linked->_fields)) or in_array($field_discount, $linked->getDataFieldsNames())) {
                 $discount = $linked->get($field_discount);
             } else {
                 $discount = $linked->getTVValue($field_discount);
