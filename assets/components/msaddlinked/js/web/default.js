@@ -10,8 +10,7 @@ $(document).on('ready', function() {
     if (msal.price_orig_target === undefined) {
         msal.price_orig_target = '#msal_price_original';
     }
-
-    $(document).on('change', '.msal_input', function (event) {
+    msal.calculatePrice = function (event) {
         msal.orig_price = parseInt($(msal.price_orig_target).val());
         msal.additional_price = 0;
         msal.discount = 0;
@@ -49,5 +48,8 @@ $(document).on('ready', function() {
         $(msal.price_target).html(new_price);
         $(msal.price_full_target).html(full_price);
 
-    });
+    };
+
+    $(document).on('change', '.msal_input', msal.calculatePrice);
+    msal.calculatePrice();
 });

@@ -1,5 +1,9 @@
 Changelog for msAddLinked.
 
+0.2.0-pl3
+==============
+- Added ability to recalculate price at document ready event
+
 0.2.0-pl2
 ==============
 - Fixed use of an array of field names
