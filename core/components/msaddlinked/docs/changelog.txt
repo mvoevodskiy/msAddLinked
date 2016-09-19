@@ -1,5 +1,9 @@
 Changelog for msAddLinked.
 
+0.2.1-pl
+==============
+- Fixed calculate price if no options found
+
 0.2.0-pl3
 ==============
 - Added ability to recalculate price at document ready event

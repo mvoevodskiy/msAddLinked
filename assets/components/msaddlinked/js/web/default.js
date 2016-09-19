@@ -11,6 +11,9 @@ $(document).on('ready', function() {
         msal.price_orig_target = '#msal_price_original';
     }
     msal.calculatePrice = function (event) {
+        if ($(msal.price_orig_target).val() === undefined) {
+            return;
+        }
         msal.orig_price = parseInt($(msal.price_orig_target).val());
         msal.additional_price = 0;
         msal.discount = 0;

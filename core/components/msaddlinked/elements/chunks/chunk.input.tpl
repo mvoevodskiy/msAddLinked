@@ -1,5 +1,5 @@
 <input type="hidden" id="msal_price_original" value="{$product_price}">
-<input type="hidden" id="msal_price_original" value="{$hash}" name="msal_key">
+<input type="hidden" id="msal_hash" value="{$hash}" name="msal_key">
 {foreach $inputs as $input}
     <div class="col-md-6">
         <label class="col-md-7" for="msal_{$input.link_id}_{$input.linked_id}">{$input.linked_name} {$input.linked_price} {'ms2_frontend_currency'| lexicon}</label>
