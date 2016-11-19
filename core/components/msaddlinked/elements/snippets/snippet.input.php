@@ -11,6 +11,12 @@ $tpl = $modx->getOption('tpl', $scriptProperties, 'tpl.msAddLinked.input');
 //$tplOuter = $modx->getOption('tplOuter', $scriptProperties, 'tpl.msAddLinked.inputOuter');
 $product_id = $modx->getOption('product', $scriptProperties, 0);
 $link_id = $modx->getOption('link', $scriptProperties, 0);
+$resources = $modx->getOption('resources', $scriptProperties, '');
+$parents = $modx->getOption('parents', $scriptProperties, 0);
+$includeTVs = $modx->getOption('includeTVs', $scriptProperties, '');
+$tvPrefix = $modx->getOption('tvPrefix', $scriptProperties, 'tv.');
+$class = $modx->getOption('class', $scriptProperties, 'msProduct');
+$includeContent = $modx->getOption('includeContent', $scriptProperties, 0);
 $input_type = $modx->getOption('inputType', $scriptProperties, 'checkbox');
 $field_name = $modx->getOption('fieldName', $scriptProperties, 'pagetitle');
 $field_discount = $modx->getOption('fieldDiscount', $scriptProperties, '');
@@ -22,6 +28,10 @@ $toPlaceholder = $modx->getOption('toPlaceholder', $scriptProperties, false);
 $var = $modx->getOption('msal_variable', null, 'msal');
 $price = 0;
 $output = '';
+$inputs = array();
+$options = array();
+$ids = array();
+$linksIds = array();
 $hash = md5(http_build_query($scriptProperties));
 $_SESSION['msal'][$hash] = $scriptProperties;
 
@@ -43,45 +53,93 @@ if ($link_id) {
     $criteria['link'] = $link_id;
 }
 
-
-/** @var msProductLink[] $rows */
+/** @var msProductLink[] $links */
 $links = $modx->getCollection('msProductLink', $criteria);
-$inputs = array();
 foreach ($links as $l) {
-    /** @var msProduct $linked */
-    if ($linked = $l->getOne('Slave')) {
-        if ($input_type != 'radio') {
+    $ids[] = $l->get('slave');
+    $linksIds[$l->get('slave')] = $l->get('id');
+}
+$resources = implode(',', array_merge(explode(',', $resources), $ids));
+
+$select = array(
+    $class => !empty($includeContent) ?  $modx->getSelectColumns($class, $class) : $modx->getSelectColumns($class, $class, '', array('content'), true),
+	'Data' => $modx->getSelectColumns('msProductData', 'Data', '', array('id'), true),
+);
+
+
+$config = array(
+    'class' => 'msProduct',
+    'loadModels' => 'miniShop2',
+    'parents' => $parents,
+    'select' => $modx->toJSON($select),
+    'where' => array(
+        'msProduct.class_key' => 'msProduct',
+    ),
+    'leftJoin' => array(
+        array('class' => 'msProductData', 'alias' => 'Data', 'on' => '`msProduct`.`id`=`Data`.`id`'),
+    ),
+    'return' => 'data',
+);
+
+if (!empty($field_discount) and !$modx->getCount('modTemplateVar', array('name' => $field_discount ))) {
+    $config['includeTVs'] = implode(',', array_merge(explode(',', $includeTVs), array($field_discount)));
+    $field_discount = $tvPrefix . $field_discount;
+}
+
+if ($resources or $parents) {
+    $config = array_merge($scriptProperties, $config);
+    $pdoFetch->setConfig($config);
+    if ($options = $pdoFetch->run()) {
+        foreach($options as &$resource) {
+            $id = $resource['id'];
             $value = '';
-            $id = $linked->get('id');
-        } else {
-            $id = 'radio';
-            $value = $linked->get('id');
-        }
-        $discount = 0;
-        if ($field_discount) {
-            if (in_array($field_discount, array_keys($linked->_fields)) or in_array($field_discount, $linked->getDataFieldsNames())) {
-                $discount = $linked->get($field_discount);
-            } else {
-                $discount = $linked->getTVValue($field_discount);
+            if ($input_type == 'radio') {
+                $value = $id;
+                if (isset($linksIds[$id])) {
+                    $id = 'radio__' . $linksIds[$id];
+                } else {
+                    $id = 'radio';
+                }
             }
+            $discount = 0;
+            if (!empty($field_discount)) {
+                $discount = $resource[$field_discount];
+            }
+            $inputs[] = array_merge(
+                $resource,
+                array(
+                    'discount' => $discount,
+                    "input_type" => $input_type,
+                    "value" => $value,
+                    ),
+                // Более не используется. Оставлено для обратной совместимости
+                array(
+                    "linked_id" => $id,
+                    "linked_name" => $resource[$field_name],
+                    "linked_price" => $resource['price'],
+                    "link_id" => 0,
+                    "field_name" => $field_name,
+                    "linked_discount" => $discount,
+                    )
+                );
         }
-        $inputs[] = array(
-            "linked_id" => $id,
-            "linked_name" => $linked->get($field_name),
-            "linked_price" => $linked->get('price'),
-            "link_id" => $l->get('link'),
-            "field_name" => $field_name,
-            "linked_discount" => $discount,
-            "input_type" => $input_type,
-            "value" => $value,
-        );
+
     }
 }
+
 if (!empty($inputs)) {
 //    $output = implode("\n", $outputArray);
     $output = $pdoFetch->getChunk(
         $tpl,
-        array("inputs" => $inputs, "product_price" => $price, "var" => $var, "hash" => $hash),
+        array(
+            "options" => $options,
+            "inputs" => $inputs,
+            "product_price" => $price,
+            "var" => $var,
+            "hash" => $hash,
+            "input_type" => $input_type,
+            "field_discount" => $field_discount,
+        ),
         true
     );
 }
@@ -98,4 +156,4 @@ if ($js = trim($modx->getOption('msal_frontend_js'))) {
     }
 }
 
-return $output;
+return $output; #.'<pre class="pdoResourcesLog">' . print_r($pdoFetch->getTime(), 1) . '</pre>';

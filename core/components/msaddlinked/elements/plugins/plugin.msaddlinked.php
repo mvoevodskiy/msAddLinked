@@ -14,26 +14,27 @@ switch ($modx->event->name) {
                 $scriptProperties = array_merge($scriptProperties, $_SESSION['msal'][$_POST['msal_key']]);
             }
             $field_discount = $modx->getOption('fieldDiscount', $scriptProperties, '');
-            foreach ($options[$var] as $pKey => $count) {
+            foreach ($options[$var] as $pKey => $value) {
 
-                $linked = explode('__', $pKey);
-
-                if (empty($count)) {
-                    unset($options[$var][$pKey]);
-                    continue;
-                } elseif ($linked[0] == 'radio') {
-                    $id = $count;
-                    $count = 1;
-                    $options[$var][$id . '__' . $linked[1]] = $count;
-                    unset($options[$var][$pKey]);
-                } else {
-                    $id = $linked[0];
+                $id = $pKey;
+                if (strpos($pKey, '__') !== false) {
+                    list($id, ) = explode('__', $pKey);
                 }
 
-                if ($count == 'on') {
+                if (empty($value)) {
+                    unset($options[$var][$pKey]);
+                    continue;
+                } elseif ($value == 'radio') {
+                    $id = (int) $value;
                     $count = 1;
-                } elseif ($count !== '' and ((int) $count)) {
-                    $count = (int) $count;
+                    $options[$var][$id] = $count;
+                    unset($options[$var][$pKey]);
+                }
+
+                if ($value == 'on') {
+                    $count = 1;
+                } elseif ($value !== '' and ((int) $value)) {
+                    $count = (int) $value;
                 } elseif ($count === '') {
                     $count = 0;
                 }

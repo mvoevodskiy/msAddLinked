@@ -1,5 +1,9 @@
 Changelog for msAddLinked.
 
+0.3.0-beta
+==============
+- Added ability to use with pdoPage and mSearch2
+
 0.2.1-pl
 ==============
 - Fixed calculate price if no options found
