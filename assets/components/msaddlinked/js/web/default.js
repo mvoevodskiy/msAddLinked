@@ -14,7 +14,7 @@ $(document).on('ready', function() {
         if ($(msal.price_orig_target).val() === undefined) {
             return;
         }
-        msal.orig_price = parseInt($(msal.price_orig_target).val());
+        msal.orig_price = parseInt($(msal.price_orig_target).val().replace(' ', ''));
         msal.additional_price = 0;
         msal.discount = 0;
 

@@ -71,6 +71,7 @@ $config = array(
     'class' => 'msProduct',
     'loadModels' => 'miniShop2',
     'parents' => $parents,
+    'resources' => $resources,
     'select' => $modx->toJSON($select),
     'where' => array(
         'msProduct.class_key' => 'msProduct',
