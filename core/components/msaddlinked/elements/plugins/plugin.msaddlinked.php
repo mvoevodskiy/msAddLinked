@@ -58,6 +58,35 @@ switch ($modx->event->name) {
         }
         break;
 
+    case 'msOnBeforeCreateOrder':
+        $var = $modx->getOption('msal_session_variable', null, 'msal');
+        $orderOptions = '';
+        /** @var msOrder $msOrder */
+        /** @var msOrderProduct[] $products */
+        $products = $msOrder->getMany('Products');
+        foreach ($products as $product) {
+            $options = $product->get('options');
+            if (isset($options[$var])) {
+                $productOptions = $product->get('name') . ' ' .
+                    $product->get('count') . ' ' . $modx->lexicon('ms2_frontend_count_unit') . ' ' .
+                    $product->get('cost') . ' ' . $modx->lexicon('ms2_frontend_currency') . ' ' .
+                    $modx->runSnippet('msAddLinked.info', array('option' => $options[$var]));
+                $options[$var.'text'] = $productOptions;
+                $product->set('options', $options);
+                $orderOptions .= $productOptions . PHP_EOL;
+            }
+        }
+        if ($orderOptions) {
+            $comment = $msOrder->get('comment');
+            if ($comment) {
+                $comment .= PHP_EOL.PHP_EOL;
+            }
+            $comment .= $orderOptions;
+            $msOrder->set('comment', $comment);
+        }
+        break;
+
+
     default:
         break;
 

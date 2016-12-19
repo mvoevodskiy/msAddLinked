@@ -10,6 +10,7 @@ $tmp = array(
 			'msOnAddToCart' => array(),
 //			'msOnEmptyCart' => array(),
 //			'msOnRemoveFromCart' => array(),
+			'msOnBeforeCreateOrder' => array(),
 		)
 	)
 

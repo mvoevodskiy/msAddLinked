@@ -153,7 +153,7 @@ if ($js = trim($modx->getOption('msal_frontend_js'))) {
                         msal.price_full_target="'.$priceFullTarget.'";
                     </script>
                     '), true);
-        $modx->regClientScript(str_replace('[[+jsUrl]]', '/assets/components/msaddlinked/js/', $js));
+        $modx->regClientScript(str_replace('[[+jsUrl]]', MODX_ASSETS_URL . 'components/msaddlinked/js/', $js));
     }
 }
 
