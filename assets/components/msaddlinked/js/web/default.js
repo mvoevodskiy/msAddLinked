@@ -1,7 +1,7 @@
 /**
  * Created by mvoevodskiy on 20.07.16.
  */
-$(document).on('ready', function() {
+$(window).on('load', function() {
     msal.orig_price = 0;
     msal.additional_price = 0;
     if (msal.price_target === undefined) {
