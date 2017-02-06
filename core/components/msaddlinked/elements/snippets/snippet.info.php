@@ -23,7 +23,7 @@ if (!empty($links)) {
                 "linked_name" => $linkedMSP->get($field_name),
                 "linked_price" => $linkedMSP->get('price'),
                 "linked_count" => $count,
-                "link_id" => $linked[1],
+                "link_id" => isset($linked[1]) ? $linked[1] : '',
                 "field_name" => $field_name,
                 "value" => '',
             );

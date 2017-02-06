@@ -1,5 +1,10 @@
 Changelog for msAddLinked.
 
+0.3.3-pl
+==============
+- Added ability to format prices by MS2
+- Small fix PHP notify in msAddLinked.info snippet
+
 0.3.2-pl
 ==============
 - JS fix for JQuery 3.0+

@@ -4,6 +4,8 @@
 if (!$msAddLinked = $modx->getService('msaddlinked', 'msAddLinked', $modx->getOption('msaddlinked_core_path', null, $modx->getOption('core_path') . 'components/msaddlinked/') . 'model/msaddlinked/', $scriptProperties)) {
 	return 'Could not load msAddLinked class!';
 }
+/** @var miniShop2 $ms2 */
+$ms2 = $modx->getService('minishop2');
 /** @var pdoFetch $pdoFetch */
 $pdoFetch = $modx->getService('pdoFetch');
 
@@ -106,6 +108,7 @@ if ($resources or $parents) {
             if (!empty($field_discount)) {
                 $discount = $resource[$field_discount];
             }
+            $resource['price'] = $ms2->formatPrice($resource['price']);
             $inputs[] = array_merge(
                 $resource,
                 array(
@@ -117,7 +120,7 @@ if ($resources or $parents) {
                 array(
                     "linked_id" => $id,
                     "linked_name" => $resource[$field_name],
-                    "linked_price" => $resource['price'],
+                    "linked_price" => $ms2->formatPrice($resource['price']),
                     "link_id" => 0,
                     "field_name" => $field_name,
                     "linked_discount" => $discount,
