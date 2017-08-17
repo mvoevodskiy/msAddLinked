@@ -1,7 +1,24 @@
 /**
  * Created by mvoevodskiy on 20.07.16.
  */
+
 $(window).on('load', function() {
+    function trim(str){
+
+        if(typeof str === "number") {
+            return str;
+        }
+
+        String.prototype.trimAll=function()
+        {
+            var r=/\s+/g;
+            return this.replace(r,'');
+        };
+        return str.trimAll()
+    }
+    msalCostResult = $('[id *="msal_cost"]');
+    showCost = parseInt($('#show_cost').val());
+
     msal.orig_price = 0;
     msal.additional_price = 0;
     if (msal.price_target === undefined) {
@@ -19,7 +36,7 @@ $(window).on('load', function() {
         msal.discount = 0;
 
         $('.msal_input').each(function() {
-            add_price = parseInt($(this).data('price'));
+            add_price = parseInt(trim($(this).data('price')));
             add_discount = parseInt($(this).data('discount'));
             if (isNaN(add_discount)) {
                 add_discount = 0;
@@ -42,6 +59,14 @@ $(window).on('load', function() {
                 if (!isNaN(count)) {
                     msal.additional_price = msal.additional_price + add_price * count;
                     msal.discount = add_discount * count;
+                    if(showCost === 1){
+                        if(msal.additional_price >= add_price) {
+                            $(msalCostResult).text('+'+miniShop2.Utils.formatPrice(msal.additional_price));
+                        } else {
+                            $(msalCostResult).text(miniShop2.Utils.formatPrice(add_price));
+                        }
+                    }
+
                 }
             }
         });
