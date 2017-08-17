@@ -17,7 +17,6 @@ $(window).on('load', function() {
         return str.trimAll()
     }
     msalCostResult = $('[id *="msal_cost"]');
-    showCost = parseInt($('#show_cost').val());
 
     msal.orig_price = 0;
     msal.additional_price = 0;
@@ -26,6 +25,9 @@ $(window).on('load', function() {
     }
     if (msal.price_orig_target === undefined) {
         msal.price_orig_target = '#msal_price_original';
+    }
+    if (msal.show_cost === undefined) {
+        msal.show_cost = 0;
     }
     msal.calculatePrice = function (event) {
         if ($(msal.price_orig_target).val() === undefined) {
@@ -36,8 +38,8 @@ $(window).on('load', function() {
         msal.discount = 0;
 
         $('.msal_input').each(function() {
-            add_price = parseInt(trim($(this).data('price')));
-            add_discount = parseInt($(this).data('discount'));
+            add_price = parseInt($(this).data('price').toString().replace(' ', ''));
+            add_discount = parseInt($(this).data('discount').toString().replace(' ', ''));
             if (isNaN(add_discount)) {
                 add_discount = 0;
             }
@@ -59,7 +61,7 @@ $(window).on('load', function() {
                 if (!isNaN(count)) {
                     msal.additional_price = msal.additional_price + add_price * count;
                     msal.discount = add_discount * count;
-                    if(showCost === 1){
+                    if(msal.show_cost === 1){
                         if(msal.additional_price >= add_price) {
                             $(msalCostResult).text('+'+miniShop2.Utils.formatPrice(msal.additional_price));
                         } else {
