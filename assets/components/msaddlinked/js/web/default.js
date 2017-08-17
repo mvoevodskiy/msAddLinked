@@ -66,7 +66,6 @@ $(window).on('load', function() {
                             $(msalCostResult).text(miniShop2.Utils.formatPrice(add_price));
                         }
                     }
-
                 }
             }
         });
