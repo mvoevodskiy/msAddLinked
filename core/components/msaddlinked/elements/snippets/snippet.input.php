@@ -25,6 +25,7 @@ $field_discount = $modx->getOption('fieldDiscount', $scriptProperties, '');
 $priceTarget = $modx->getOption('priceTarget', $scriptProperties, '#price');
 $priceOrigTarget = $modx->getOption('priceOrigTarget', $scriptProperties, '#msal_price_original');
 $priceFullTarget = $modx->getOption('priceFullTarget', $scriptProperties, '#msal_price_full');
+$showCost = $modx->getOption('showCost', $scriptProperties, 0);
 $toPlaceholder = $modx->getOption('toPlaceholder', $scriptProperties, false);
 
 $var = $modx->getOption('msal_variable', null, 'msal');
@@ -154,6 +155,7 @@ if ($js = trim($modx->getOption('msal_frontend_js'))) {
                         var msal = {}; msal.price_target="'. $priceTarget. '";
                         msal.price_orig_target="'.$priceOrigTarget.'";
                         msal.price_full_target="'.$priceFullTarget.'";
+                        msal.show_cost='.$showCost.';
                     </script>
                     '), true);
         $modx->regClientScript(str_replace('[[+jsUrl]]', MODX_ASSETS_URL . 'components/msaddlinked/js/', $js));

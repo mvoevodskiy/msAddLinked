@@ -39,6 +39,10 @@ $tmp = array(
 		'type' => 'textfield',
 		'value' => "",
 	),
+	'showCost' => array(
+		'type' => 'combo-boolean',
+		'value' => 0,
+	),
 	'toPlaceholder' => array(
 		'type' => 'combo-boolean',
 		'value' => false,
