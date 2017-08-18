@@ -2,21 +2,20 @@
  * Created by mvoevodskiy on 20.07.16.
  */
 
-$(window).on('load', function() {
-    function trim(str){
+$(window).on('load', function () {
+    function trim(str) {
 
-        if(typeof str === "number") {
+        if (typeof str === "number") {
             return str;
         }
 
-        String.prototype.trimAll=function()
-        {
-            var r=/\s+/g;
-            return this.replace(r,'');
+        String.prototype.trimAll = function () {
+            var r = /\s+/g;
+            return this.replace(r, '');
         };
         return str.trimAll()
     }
-    msalCostResult = $('[id *="msal_cost"]');
+
     showCost = parseInt($('#show_cost').val());
 
     msal.orig_price = 0;
@@ -28,6 +27,8 @@ $(window).on('load', function() {
         msal.price_orig_target = '#msal_price_original';
     }
     msal.calculatePrice = function (event) {
+        msalInput = event.data? this : '.msal_input';
+
         if ($(msal.price_orig_target).val() === undefined) {
             return;
         }
@@ -35,9 +36,10 @@ $(window).on('load', function() {
         msal.additional_price = 0;
         msal.discount = 0;
 
-        $('.msal_input').each(function() {
+        $(msalInput).each(function () {
             add_price = parseInt(trim($(this).data('price')));
             add_discount = parseInt($(this).data('discount'));
+            msalCostResult = $('#msal_cost_' + $(this).data('inputId'));
             if (isNaN(add_discount)) {
                 add_discount = 0;
             }
@@ -54,14 +56,17 @@ $(window).on('load', function() {
                         count = 0;
                     }
                 } else {
+
                     count = parseInt($(this).val());
                 }
                 if (!isNaN(count)) {
+                    console.log($(this), count);
                     msal.additional_price = msal.additional_price + add_price * count;
                     msal.discount = add_discount * count;
-                    if(showCost === 1){
-                        if(msal.additional_price >= add_price) {
-                            $(msalCostResult).text('+'+miniShop2.Utils.formatPrice(msal.additional_price));
+
+                    if (showCost === 1) {
+                        if (msal.additional_price >= add_price) {
+                            $(msalCostResult).text('+' + miniShop2.Utils.formatPrice(msal.additional_price));
                         } else {
                             $(msalCostResult).text(miniShop2.Utils.formatPrice(add_price));
                         }
@@ -74,9 +79,9 @@ $(window).on('load', function() {
         full_price = miniShop2.Utils.formatPrice(msal.orig_price + msal.additional_price);
         $(msal.price_target).html(new_price);
         $(msal.price_full_target).html(full_price);
-
+        return false;
     };
 
-    $(document).on('change', '.msal_input', msal.calculatePrice);
-    msal.calculatePrice();
+    $(".msal_input").on('change',{name: ".msal_input"}, msal.calculatePrice);
+    msal.calculatePrice('change');
 });
