@@ -26,6 +26,7 @@ $(window).on('load', function () {
     if (msal.price_orig_target === undefined) {
         msal.price_orig_target = '#msal_price_original';
     }
+
     msal.calculatePrice = function (event) {
         msalInput = event.data? this : '.msal_input';
 
