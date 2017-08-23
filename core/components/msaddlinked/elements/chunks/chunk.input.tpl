@@ -9,6 +9,7 @@
                    class="form-control msal_input"
                    id="msal_{$input.id}"
                    data-price="{$input.price}"
+                   minlength="0"
                    data-discount="{$input.discount != '' ? $input.discount : ' '}"
                    {if $input.input_type != 'checkbox'}value="{$input.value}"{/if}
                    {if $input.input_type == 'checkbox' and $input.value !== ''}checked{/if}>

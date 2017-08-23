@@ -1,21 +1,8 @@
 /**
  * Created by mvoevodskiy on 20.07.16.
  */
-
-$(window).on('load', function() {
-    function trim(str){
-
-        if(typeof str === "number") {
-            return str;
-        }
-
-        String.prototype.trimAll=function()
-        {
-            var r=/\s+/g;
-            return this.replace(r,'');
-        };
-        return str.trimAll()
-    }
+console.log("RUN");
+$(window).on('load', function () {
 
     msal.showCost = parseInt($('#show_cost').val());
 
@@ -31,7 +18,7 @@ $(window).on('load', function() {
         msal.show_cost = 0;
     }
     msal.calculatePrice = function (event) {
-        msalInput = event.data? this : '.msal_input';
+        msalInput = event.data ? this : '.msal_input';
 
         if ($(msal.price_orig_target).val() === undefined) {
             return;
@@ -40,7 +27,8 @@ $(window).on('load', function() {
         msal.additional_price = 0;
         msal.discount = 0;
 
-        $('.msal_input').each(function() {
+        $(msalInput).each(function () {
+
             add_price = parseInt($(this).data('price').toString().replace(' ', ''));
             add_discount = parseInt($(this).data('discount').toString().replace(' ', ''));
             msalCostResult = $('#msal_cost_' + $(this).data('inputId'));
@@ -64,17 +52,20 @@ $(window).on('load', function() {
                     count = parseInt($(this).val());
                 }
                 if (!isNaN(count)) {
+
                     msal.additional_price = msal.additional_price + add_price * count;
                     msal.discount = add_discount * count;
-                    if(msal.show_cost === 1){
-                        if(msal.additional_price >= add_price) {
-                            $(msalCostResult).text('+'+miniShop2.Utils.formatPrice(msal.additional_price));
+                    if (msal.show_cost) {
+                        if (msal.additional_price >= add_price) {
+
+                            $(msalCostResult).text('+' + miniShop2.Utils.formatPrice(msal.additional_price));
                         } else {
                             $(msalCostResult).text(miniShop2.Utils.formatPrice(add_price));
                         }
                     }
                 }
             }
+
         });
 
         new_price = miniShop2.Utils.formatPrice(msal.orig_price + msal.additional_price - msal.discount);
@@ -84,6 +75,6 @@ $(window).on('load', function() {
 
     };
 
-    $(".msal_input").on('change',{name: ".msal_input"}, msal.calculatePrice);
+    $(".msal_input").on('change', {name: ".msal_input"}, msal.calculatePrice);
     msal.calculatePrice('change');
 });
