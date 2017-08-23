@@ -1,5 +1,6 @@
 Changelog for msAddLinked.
 
+0.3.4-pl
 ==============
 - Added ability to show option cost instead of price
 
