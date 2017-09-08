@@ -4,7 +4,7 @@
 console.log("RUN");
 $(window).on('load', function () {
 
-    msal.showCost = parseInt($('#show_cost').val());
+    // msal.showCost = parseInt($('#show_cost').val());
 
     msal.orig_price = 0;
     msal.additional_price = 0;

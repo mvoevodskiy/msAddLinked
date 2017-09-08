@@ -155,7 +155,7 @@ if ($js = trim($modx->getOption('msal_frontend_js'))) {
                         var msal = {}; msal.price_target="'. $priceTarget. '";
                         msal.price_orig_target="'.$priceOrigTarget.'";
                         msal.price_full_target="'.$priceFullTarget.'";
-                        msal.show_cost='.$showCost.';
+                        msal.show_cost=' . ($showCost ?: 0) . ';
                     </script>
                     '), true);
         $modx->regClientScript(str_replace('[[+jsUrl]]', MODX_ASSETS_URL . 'components/msaddlinked/js/', $js));
