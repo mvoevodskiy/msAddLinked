@@ -4,8 +4,6 @@
 console.log("RUN");
 $(window).on('load', function () {
 
-    // msal.showCost = parseInt($('#show_cost').val());
-
     msal.orig_price = 0;
     msal.additional_price = 0;
     if (msal.price_target === undefined) {
@@ -18,7 +16,7 @@ $(window).on('load', function () {
         msal.show_cost = 0;
     }
     msal.calculatePrice = function (event) {
-        msalInput = event.data ? this : '.msal_input';
+        msalInput = '.msal_input';
 
         if ($(msal.price_orig_target).val() === undefined) {
             return;
@@ -55,13 +53,10 @@ $(window).on('load', function () {
 
                     msal.additional_price = msal.additional_price + add_price * count;
                     msal.discount = add_discount * count;
-                    if (msal.show_cost) {
-                        if (msal.additional_price >= add_price) {
-
-                            $(msalCostResult).text('+' + miniShop2.Utils.formatPrice(msal.additional_price));
-                        } else {
-                            $(msalCostResult).text(miniShop2.Utils.formatPrice(add_price));
-                        }
+                    if (count > 0) {
+                        $(msalCostResult).text('+' + miniShop2.Utils.formatPrice(add_price * count));
+                    } else {
+                        $(msalCostResult).text(miniShop2.Utils.formatPrice(add_price));
                     }
                 }
             }
