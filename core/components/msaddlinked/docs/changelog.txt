@@ -1,5 +1,9 @@
 Changelog for msAddLinked.
 
+0.3.7-beta
+==============
+- Removed price round in JS
+
 0.3.6-beta
 ==============
 - Fixed ability to show option cost instead of price

@@ -21,14 +21,14 @@ $(window).on('load', function () {
         if ($(msal.price_orig_target).val() === undefined) {
             return;
         }
-        msal.orig_price = parseInt($(msal.price_orig_target).val().replace(' ', ''));
+        msal.orig_price = parseFloat($(msal.price_orig_target).val().replace(' ', ''));
         msal.additional_price = 0;
         msal.discount = 0;
 
         $(msalInput).each(function () {
 
-            add_price = parseInt($(this).data('price').toString().replace(' ', ''));
-            add_discount = parseInt($(this).data('discount').toString().replace(' ', ''));
+            add_price = parseFloat($(this).data('price').toString().replace(' ', ''));
+            add_discount = parseFloat($(this).data('discount').toString().replace(' ', ''));
             msalCostResult = $('#msal_cost_' + $(this).data('inputId'));
 
             if (isNaN(add_discount)) {
@@ -47,7 +47,7 @@ $(window).on('load', function () {
                         count = 0;
                     }
                 } else {
-                    count = parseInt($(this).val());
+                    count = parseFloat($(this).val());
                 }
                 if (!isNaN(count)) {
 
