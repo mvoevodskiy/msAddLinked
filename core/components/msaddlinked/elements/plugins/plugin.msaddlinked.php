@@ -24,8 +24,9 @@ switch ($modx->event->name) {
                 if (empty($value)) {
                     unset($options[$var][$pKey]);
                     continue;
-                } elseif ($value == 'radio') {
+                } elseif ($id == 'radio') {
                     $id = (int) $value;
+                    $value = 1;
                     $count = 1;
                     $options[$var][$id] = $count;
                     unset($options[$var][$pKey]);

@@ -36,6 +36,7 @@ $options = array();
 $ids = array();
 $linksIds = array();
 $hash = md5(http_build_query($scriptProperties));
+$smallHash = substr($hash,0,6);
 $_SESSION['msal'][$hash] = $scriptProperties;
 
 $product_id = $product_id == 0 ? $modx->resource->id : $product_id;
@@ -96,14 +97,16 @@ if ($resources or $parents) {
     if ($options = $pdoFetch->run()) {
         foreach($options as &$resource) {
             $id = $resource['id'];
+            $input_name = 'options[' . $var . '][' . $id . ']';
             $value = '';
             if ($input_type == 'radio') {
+                $input_name = 'options[' . $var . '][radio__' . $smallHash . ']';
                 $value = $id;
-                if (isset($linksIds[$id])) {
+//                if (isset($linksIds[$id])) {
                     $id = 'radio__' . $linksIds[$id];
-                } else {
-                    $id = 'radio';
-                }
+//                } else {
+//                    $id = 'radio';
+//                }
             }
             $discount = 0;
             if (!empty($field_discount)) {
@@ -114,7 +117,7 @@ if ($resources or $parents) {
                 $resource,
                 array(
                     'discount' => $discount,
-                    "input_type" => $input_type,
+                    "input_name" => $input_name,
                     "value" => $value,
                     ),
                 // Более не используется. Оставлено для обратной совместимости
@@ -125,6 +128,7 @@ if ($resources or $parents) {
                     "link_id" => 0,
                     "field_name" => $field_name,
                     "linked_discount" => $discount,
+                    "input_type" => $input_type,
                     )
                 );
         }

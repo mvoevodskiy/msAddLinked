@@ -5,14 +5,14 @@
     <div class="col-md-6">
         <label class="col-md-7" for="msal_{$input.id}">{$input.pagetitle} <span id="msal_cost_{$input.id}">{$input.price}</span>  {'ms2_frontend_currency'| lexicon}</label>
         <div class="col-md-5">
-            <input type="{$input.input_type}" name="options[{$var}][{$input.id}]"
+            <input type="{$input_type}" name="{$input.input_name}"
                    class="form-control msal_input"
                    id="msal_{$input.id}"
                    data-price="{$input.price}"
                    minlength="0"
                    data-discount="{$input.discount != '' ? $input.discount : ' '}"
-                   {if $input.input_type != 'checkbox'}value="{$input.value}"{/if}
-                   {if $input.input_type == 'checkbox' and $input.value !== ''}checked{/if}>
+                   {if $input_type != 'checkbox'}value="{$input.value}"{/if}
+                   {if $input_type == 'checkbox' and $input.value !== ''}checked{/if}>
         </div>
     </div>
 {/foreach}

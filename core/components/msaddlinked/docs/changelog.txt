@@ -1,5 +1,9 @@
 Changelog for msAddLinked.
 
+0.3.8-beta
+==============
+- Fixed radio type behaviour
+
 0.3.7-beta
 ==============
 - Removed price round in JS
