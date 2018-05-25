@@ -13,6 +13,7 @@ switch ($modx->event->name) {
             if (isset($_POST['msal_key']) and isset($_SESSION['msal'][$_POST['msal_key']])) {
                 $scriptProperties = array_merge($scriptProperties, $_SESSION['msal'][$_POST['msal_key']]);
             }
+            $fieldPrice = $modx->getOption('fieldPrice', $scriptProperties, 'price');
             $field_discount = $modx->getOption('fieldDiscount', $scriptProperties, '');
             foreach ($options[$var] as $pKey => $value) {
 
@@ -49,7 +50,7 @@ switch ($modx->event->name) {
                             $discount = $linkedMSP->getTVValue($field_discount);
                         }
                     }
-                    $additionalPrice = $additionalPrice + ($linkedMSP->get('price') - $discount) * $count;
+                    $additionalPrice = $additionalPrice + ($linkedMSP->get($fieldPrice) - $discount) * $count;
                 }
 
             }

@@ -1,5 +1,9 @@
 Changelog for msAddLinked.
 
+0.3.9-beta
+==============
+- Added abitility to use custom field for options price
+
 0.3.8-beta
 ==============
 - Fixed radio type behaviour

@@ -22,6 +22,7 @@ $includeContent = $modx->getOption('includeContent', $scriptProperties, 0);
 $input_type = $modx->getOption('inputType', $scriptProperties, 'checkbox');
 $field_name = $modx->getOption('fieldName', $scriptProperties, 'pagetitle');
 $field_discount = $modx->getOption('fieldDiscount', $scriptProperties, '');
+$priceField = $modx->getOption('priceField', $scriptProperties, 'price');
 $priceTarget = $modx->getOption('priceTarget', $scriptProperties, '#price');
 $priceOrigTarget = $modx->getOption('priceOrigTarget', $scriptProperties, '#msal_price_original');
 $priceFullTarget = $modx->getOption('priceFullTarget', $scriptProperties, '#msal_price_full');
