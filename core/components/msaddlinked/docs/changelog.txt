@@ -1,5 +1,8 @@
 Changelog for msAddLinked.
 
+==============
+- Improved work with msOptionsPrice2
+
 0.3.9-beta
 ==============
 - Added abitility to use custom field for options price
