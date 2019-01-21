@@ -19,9 +19,9 @@ $sources = array(
 	'build' => $root . '_build/',
 	'data' => $root . '_build/data/',
 	'resolvers' => $root . '_build/resolvers/',
-	'chunks' => $root . 'core/components/' . PKG_NAME_LOWER . '/elements/chunks/',
-	'snippets' => $root . 'core/components/' . PKG_NAME_LOWER . '/elements/snippets/',
-	'plugins' => $root . 'core/components/' . PKG_NAME_LOWER . '/elements/plugins/',
+	'chunks' => $root . '_build/elements/chunks/',
+	'snippets' => $root . '_build/elements/snippets/',
+	'plugins' => $root . '_build/elements/plugins/',
 	'lexicon' => $root . 'core/components/' . PKG_NAME_LOWER . '/lexicon/',
 	'docs' => $root . 'core/components/' . PKG_NAME_LOWER . '/docs/',
 	'pages' => $root . 'core/components/' . PKG_NAME_LOWER . '/elements/pages/',
@@ -45,6 +45,40 @@ if (!XPDO_CLI_MODE) {
 
 $builder = new modPackageBuilder($modx);
 $builder->createPackage(PKG_NAME_LOWER, PKG_VERSION, PKG_RELEASE);
+
+$username = 'mv@vmscompany.ru'; // Укажите свой аккаунт
+$api_key = 'e16daff3139848de4745cf89d6ecc37c'; // и свой ключ сайта
+
+$client = $modx->getService('rest.modRestCurlClient');
+$result = $client->request('https://modstore.pro/extras/package/', 'encode', 'POST', array(
+    'package' => PKG_NAME,
+    'http_host' => $modx->getOption('http_host'),
+    'username' => $username,
+    'api_key' => $api_key,
+    'version' => PKG_VERSION . '-' . PKG_RELEASE,
+    'vehicle_version' => '2.0.0'
+), array('contentType' => 'application/xml'));
+$data = new SimpleXMLElement($result);
+if (!empty($data->key)) {
+    $modx->log(modX::LOG_LEVEL_INFO, 'Key: ' . $data->key);
+} elseif (!empty($data->message)) {
+    $modx->log(modX::LOG_LEVEL_INFO, 'Error: ' . $data->message);
+}
+
+define('PKG_ENCODE_KEY', $data->key);
+
+$builder->package->put(array(
+    'source' => $sources['source_core'] . '/model/encryptedvehicle.class.php',
+    'target' => "return MODX_CORE_PATH . 'components/" . PKG_NAME_LOWER . "/model/';",
+), array('vehicle_class' => 'xPDOFileVehicle', xPDOTransport::UNINSTALL_FILES => false));
+
+$builder->putVehicle($builder->createVehicle(array(
+    'source' => $sources['resolvers'] . 'resolve.encryption.php',
+), array('vehicle_class' => 'xPDOScriptVehicle')));
+
+$modx->loadClass('transport.xPDOObjectVehicle', XPDO_CORE_PATH, true, true);
+require_once $sources['source_core'] . '/model/encryptedvehicle.class.php';
+
 $builder->registerNamespace(PKG_NAME_LOWER, false, true, PKG_NAMESPACE_PATH);
 
 $modx->log(modX::LOG_LEVEL_INFO, 'Created Transport Package and Namespace.');
@@ -178,6 +212,8 @@ $category = $modx->newObject('modCategory');
 $category->set('category', PKG_NAME);
 /* create category vehicle */
 $attr = array(
+    'vehicle_class' => 'encryptedVehicle',
+    xPDOTransport::ABORT_INSTALL_ON_VEHICLE_FAIL => true,
 	xPDOTransport::UNIQUE_KEY => 'category',
 	xPDOTransport::PRESERVE_KEYS => false,
 	xPDOTransport::UPDATE_OBJECT => true,
