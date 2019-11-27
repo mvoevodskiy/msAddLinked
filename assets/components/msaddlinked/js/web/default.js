@@ -24,12 +24,15 @@ $(window).on('load', function () {
         msal.orig_price = parseFloat($(msal.price_orig_target).val().replace(' ', ''));
         msal.additional_price = 0;
         msal.discount = 0;
+        msal.discountPercent = 1;
 
         $(msalInput).each(function () {
 
             add_price = parseFloat($(this).data('price').toString().replace(' ', ''));
-            add_discount = parseFloat($(this).data('discount').toString().replace(' ', ''));
+            add_discount_string = String($(this).data('discount').toString().replace(' ', ''));
+            add_discount = parseFloat(add_discount_string);
             msalCostResult = $('#msal_cost_' + $(this).data('inputId'));
+            count = 1;
 
             if (isNaN(add_discount)) {
                 add_discount = 0;
@@ -37,7 +40,9 @@ $(window).on('load', function () {
             if ($(this).attr('type') === 'checkbox') {
                 if ($(this).is(':checked')) {
                     msal.additional_price = msal.additional_price + add_price;
-                    msal.discount = add_discount;
+                    if (add_discount_string.indexOf('%') === -1) {
+                        msal.discount = add_discount;
+                    }
                 }
             } else {
                 if ($(this).attr('type') === 'radio') {
@@ -52,7 +57,9 @@ $(window).on('load', function () {
                 if (!isNaN(count)) {
 
                     msal.additional_price = msal.additional_price + add_price * count;
-                    msal.discount = add_discount * count;
+                    if (add_discount_string.indexOf('%') === -1) {
+                        msal.discount = add_discount * count;
+                    }
                     if (count > 0) {
                         $(msalCostResult).text('+' + miniShop2.Utils.formatPrice(add_price * count));
                     } else {
@@ -60,10 +67,14 @@ $(window).on('load', function () {
                     }
                 }
             }
+            if (add_discount_string.indexOf('%') > -1) {
+                add_discount_string = add_discount_string.replace('%', '');
+                msal.discountPercent = msal.discountPercent - parseFloat(add_discount_string) / 100 * count;
+            }
 
         });
 
-        new_price = miniShop2.Utils.formatPrice(msal.orig_price + msal.additional_price - msal.discount);
+        new_price = miniShop2.Utils.formatPrice((msal.orig_price + msal.additional_price - msal.discount) * msal.discountPercent);
         full_price = miniShop2.Utils.formatPrice(msal.orig_price + msal.additional_price);
         $(msal.price_target).html(new_price);
         $(msal.price_full_target).html(full_price);

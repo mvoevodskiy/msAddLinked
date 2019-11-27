@@ -1,5 +1,9 @@
 Changelog for msAddLinked.
 
+0.4.1-pl
+==============
+- Added support for percent discounts
+
 0.4.0-beta
 ==============
 - Improved work with msOptionsPrice2

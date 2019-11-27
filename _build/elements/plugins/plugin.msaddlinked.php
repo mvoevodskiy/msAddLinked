@@ -15,6 +15,7 @@ switch ($modx->event->name) {
             }
             $fieldPrice = $modx->getOption('fieldPrice', $scriptProperties, 'price');
             $field_discount = $modx->getOption('fieldDiscount', $scriptProperties, '');
+            $discount_percent = 1;
             foreach ($options[$var] as $pKey => $value) {
 
                 $id = $pKey;
@@ -43,6 +44,7 @@ switch ($modx->event->name) {
 
                 if ($linkedMSP = $modx->getObject('msProduct', (int) $id)) {
                     $discount = 0;
+                    $disPercent = 0;
                     if ($field_discount) {
                         if (in_array($field_discount, $linkedMSP->fieldNames) or in_array($field_discount, $linkedMSP->getDataFieldsNames())) {
                             $discount = $linkedMSP->get($field_discount);
@@ -50,11 +52,16 @@ switch ($modx->event->name) {
                             $discount = $linkedMSP->getTVValue($field_discount);
                         }
                     }
+                    if (strpos($discount, '%') !== false) {
+                        $discount_percent -= ((float) str_replace('%', '', $discount)) / 100 * $count;
+                        $discount = 0;
+                    }
+                    $modx->log(1, 'DISCOUNT: ' . $discount . ', DISCOUNT PERCENT: ' . $discount_percent);
                     $additionalPrice = $additionalPrice + ($linkedMSP->get($fieldPrice) - $discount) * $count;
                 }
 
             }
-            $cartArray[$key]['price'] = $cartArray[$key]['price'] + $additionalPrice;
+            $cartArray[$key]['price'] = ($cartArray[$key]['price'] + $additionalPrice) * $discount_percent;
             $options[$var] = json_encode($options[$var]);
             $cart->set($cartArray);
         }
