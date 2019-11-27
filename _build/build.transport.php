@@ -46,7 +46,7 @@ if (!XPDO_CLI_MODE) {
 $builder = new modPackageBuilder($modx);
 $builder->createPackage(PKG_NAME_LOWER, PKG_VERSION, PKG_RELEASE);
 
-$username = 'mv@vmscompany.ru'; // Укажите свой аккаунт
+$username = 'mv@aaa0.ru'; // Укажите свой аккаунт
 $api_key = 'e16daff3139848de4745cf89d6ecc37c'; // и свой ключ сайта
 
 $client = $modx->getService('rest.modRestCurlClient');
