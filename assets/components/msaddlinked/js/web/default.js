@@ -41,7 +41,7 @@ $(window).on('load', function () {
                 if ($(this).is(':checked')) {
                     msal.additional_price = msal.additional_price + add_price;
                     if (add_discount_string.indexOf('%') === -1) {
-                        msal.discount = add_discount;
+                        msal.discount += add_discount;
                     }
                 }
             } else {
@@ -58,7 +58,7 @@ $(window).on('load', function () {
 
                     msal.additional_price = msal.additional_price + add_price * count;
                     if (add_discount_string.indexOf('%') === -1) {
-                        msal.discount = add_discount * count;
+                        msal.discount += add_discount * count;
                     }
                     if (count > 0) {
                         $(msalCostResult).text('+' + miniShop2.Utils.formatPrice(add_price * count));

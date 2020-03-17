@@ -1,5 +1,9 @@
 Changelog for msAddLinked.
 
+0.4.2-pl
+==============
+- Fixed calculate absolute discounts in JS
+
 0.4.1-pl
 ==============
 - Added support for percent discounts
